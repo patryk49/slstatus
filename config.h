@@ -2,10 +2,13 @@
 
 
 
+#define BATTERY_NAME "BAT0"
+
+#define ETHERNET_DEVICE "eth0"
+#define WIFI_DEVICE "wlan0"
 
 
-
-
+const char *battery_perc(const char *bat);
 //const char *volume_perc(void);
 const char *netspeed_rx_auto(void);
 
@@ -96,9 +99,30 @@ static const struct arg args[] = {
 
 
 
+const char *battery_perc(const char *bat){
+	static char bat_str[8];
+	FILE *status_file = fopen("/sys/class/power_supply/"BATTERY_NAME"/status", "r");
+	FILE *capacity_file = fopen("/sys/class/power_supply/"BATTERY_NAME"/capacity", "r");
+	memcpy(bat_str, getc(status_file)=='D' ? "bat:   " : "sup:   ", 8);
+	fgets(bat_str+4, 4, capacity_file);
+	if (bat_str[6] != '0'){
+		if (bat_str[5] != ' '){
+			bat_str[6] = bat_str[5];
+			bat_str[5] = bat_str[4];
+		} else{
+			bat_str[6] = bat_str[4];
+		}	
+		bat_str[4] = ' ';
+	}
+	
+	fclose(status_file);
+	fclose(capacity_file);
+	return bat_str;
+}
 
-#define ETHERNET_DEVICE "eth0"
-#define WIFI_DEVICE "wlan0"
+
+
+
 
 typedef struct{
 	const char *digits;

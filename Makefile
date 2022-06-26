@@ -6,7 +6,6 @@ include config.mk
 
 REQ = util
 COM =\
-	components/battery\
 	components/cpu\
 	components/datetime\
 	components/disk\
@@ -28,6 +27,7 @@ COM =\
 	components/user\
 	components/volume\
 	components/wifi
+#	components/battery
 
 all: slstatus
 
