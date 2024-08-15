@@ -105,13 +105,13 @@ const char *battery_perc(const char *bat){
 	FILE *capacity_file = fopen("/sys/class/power_supply/"BATTERY_NAME"/capacity", "r");
 	memcpy(bat_str, getc(status_file)=='D' ? "bat:   " : "sup:   ", 8);
 	fgets(bat_str+4, 4, capacity_file);
-	if (bat_str[6] != '0'){
-		if (bat_str[5] != ' '){
-			bat_str[6] = bat_str[5];
-			bat_str[5] = bat_str[4];
-		} else{
-			bat_str[6] = bat_str[4];
-		}	
+	if (bat_str[5] == '\n'){
+		bat_str[6] = bat_str[4];
+		bat_str[5] = ' ';
+		bat_str[4] = ' ';
+	} else if (bat_str[6] == '\n'){
+		bat_str[6] = bat_str[5];
+		bat_str[5] = bat_str[4];
 		bat_str[4] = ' ';
 	}
 	
